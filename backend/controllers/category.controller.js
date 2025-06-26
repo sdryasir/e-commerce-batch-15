@@ -3,9 +3,15 @@ import Category from "../models/Category.js"
 
 export const createnewCategory = async (req, res) => {
   try {
-    const data = req.body;  
-    await Category.create(data);
-    res.json({message:'Category has been created successfully'});
+    const { name, slug, description } = req.body;
+    const file = req.file;
+    
+    console.log("category", { name, slug, description });
+    console.log("file", file);
+    
+    
+    // await Category.create(data);
+    // res.json({message:'Category has been created successfully'});
   } catch (error) {
     if(error.code == 11000){
       res.json({message:'Category already exists'});

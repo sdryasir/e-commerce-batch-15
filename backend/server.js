@@ -5,6 +5,9 @@ dotenv.config();
 import dbConnect from './config/db.js';
 import bodyParser from 'body-parser';
 import cors from 'cors'
+import multer from 'multer';
+const storage = multer.memoryStorage(); // or use diskStorage if needed
+const upload = multer({ storage: storage });
 
 import { 
   getAllProducts,
@@ -15,6 +18,14 @@ import {
 } from './controllers/products.controller.js';
 
 import { createnewCategory, deleteCategory, getAllCategories, getCategoryById, updateCategory } from './controllers/category.controller.js';
+import { v2 as cloudinary } from 'cloudinary';
+
+
+cloudinary.config({ 
+        cloud_name: 'variety-stationers-and-sports', 
+        api_key: '144352685646893', 
+        api_secret: 'Y98Fl_rUFRvj21X_s_b24WIF8HM' // Click 'View API Keys' above to copy your API secret
+});
 
 const port = process.env.PORT || 3200
 dbConnect()
@@ -34,7 +45,7 @@ app.delete('/products/:id', deleteProduct);
 
 app.get('/categories', getAllCategories);
 app.get('/categories/:id', getCategoryById);
-app.post('/categories/new', createnewCategory);
+app.post('/categories/new', upload.single('image'), createnewCategory);
 app.put('/categories/:id', updateCategory);
 app.delete('/categories/:id', deleteCategory);
 

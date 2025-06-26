@@ -199,9 +199,7 @@ body {
     position: relative;
     display: inline-block;
 }
-input[type="file"] {
-    display: none;
-}
+
 .custom-file-upload {
     background-color: #fff;
     width: 30px;
