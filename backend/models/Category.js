@@ -7,7 +7,10 @@ const categorySchema = new mongoose.Schema({
   },
   slug: { type: String, unique: true },
   description: String,
-  image:String,
+  image:{
+    public_id:String,
+    secure_url:String
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

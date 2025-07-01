@@ -22,9 +22,9 @@ import { v2 as cloudinary } from 'cloudinary';
 
 
 cloudinary.config({ 
-        cloud_name: 'variety-stationers-and-sports', 
-        api_key: '144352685646893', 
-        api_secret: 'Y98Fl_rUFRvj21X_s_b24WIF8HM' // Click 'View API Keys' above to copy your API secret
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_CLOUD_API_KEY, 
+    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET // Click 'View API Keys' above to copy your API secret
 });
 
 const port = process.env.PORT || 3200

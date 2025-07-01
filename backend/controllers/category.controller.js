@@ -1,18 +1,33 @@
 import Category from "../models/Category.js"
-
+import { v2 as cloudinary } from 'cloudinary';
 
 export const createnewCategory = async (req, res) => {
   try {
     const { name, slug, description } = req.body;
     const file = req.file;
+
+    const base64Image = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
     
-    console.log("category", { name, slug, description });
-    console.log("file", file);
+    const uploadResult = await cloudinary.uploader.upload(base64Image, {
+      folder: 'categories', 
+    });
+
+    const category_img = {
+      public_id:uploadResult.public_id,
+      secure_url:uploadResult.secure_url
+    }
+    const data = {
+      name,
+      slug,
+      description,
+      image:category_img
+    }
     
     
-    // await Category.create(data);
-    // res.json({message:'Category has been created successfully'});
+    await Category.create(data);
+    res.json({message:'Category has been created successfully'});
   } catch (error) {
+    console.log("**************", error);
     if(error.code == 11000){
       res.json({message:'Category already exists'});
     }else if(error.name == "ValidationError"){
