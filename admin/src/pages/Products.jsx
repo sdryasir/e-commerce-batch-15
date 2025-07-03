@@ -68,11 +68,11 @@ function Products() {
                         <td>{product.price}</td>
                         <td>{product.stock}</td>
                         <td>
-                            <div className="d-flex justify-content-end">
+                          <div className="d-flex justify-content-end">
                             <a className="btn btn-sm btn-info me-1" href="#" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop"><i className="bi bi-box-arrow-up-right"></i></a>
                             <a className="btn btn-sm btn-warning me-1" href="#"><i className="bi bi-pencil-square"></i></a>
                             <button className="btn btn-sm btn-danger" onClick={()=>handleDelete(product._id)}><i className="bi bi-trash3"></i></button>
-                        </div>
+                          </div>
                         </td>
                     </tr>
                 ))

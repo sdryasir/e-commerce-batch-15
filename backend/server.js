@@ -33,7 +33,9 @@ dbConnect()
 app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}))
 
 
 app.get('/products', getAllProducts);
@@ -44,10 +46,10 @@ app.delete('/products/:id', deleteProduct);
 
 
 app.get('/categories', getAllCategories);
+app.delete('/delete/categories/:id', deleteCategory);
 app.get('/categories/:id', getCategoryById);
 app.post('/categories/new', upload.single('image'), createnewCategory);
 app.put('/categories/:id', updateCategory);
-app.delete('/categories/:id', deleteCategory);
 
 
 

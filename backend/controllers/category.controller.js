@@ -27,7 +27,6 @@ export const createnewCategory = async (req, res) => {
     await Category.create(data);
     res.json({message:'Category has been created successfully'});
   } catch (error) {
-    console.log("**************", error);
     if(error.code == 11000){
       res.json({message:'Category already exists'});
     }else if(error.name == "ValidationError"){
@@ -68,12 +67,40 @@ export const updateCategory = async (req, res) => {
   }
 }
 
+
 export const deleteCategory = async (req, res) => {
+
+  console.log("ID:", req.params.id);
+  console.log("Public ID:", req.query.publicId);
+
+
   try {
-    const {id} = req.params;
+    const { id, publicId } = req.params;
+
+    if (!id || !publicId) {
+      return res.status(400).json({ message: "Missing id or publicId" });
+    }
+
+
+    let pId = publicId.split('/')[1]
+
+    // Delete image from Cloudinary
+    const cloudinaryResult = await cloudinary.uploader.destroy(pId);
+
+    if (cloudinaryResult.result !== 'ok') {
+      return res.status(500).json({ message: "Failed to delete image from Cloudinary", cloudinaryResult });
+    }
+
+    // Delete category from MongoDB
     const category = await Category.findByIdAndDelete(id);
-    res.json({message:"Category has been deleted successfully"});
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found in database" });
+    }
+
+    res.json({ message: "Category and image deleted successfully" });
   } catch (error) {
-    res.json(error)
+    console.error("Delete Category Error:", error);
+    res.status(500).json({ message: "Server Error", error });
   }
-}
+};
