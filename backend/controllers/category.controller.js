@@ -69,23 +69,19 @@ export const updateCategory = async (req, res) => {
 
 
 export const deleteCategory = async (req, res) => {
-
-  console.log("ID:", req.params.id);
-  console.log("Public ID:", req.query.publicId);
-
-
   try {
-    const { id, publicId } = req.params;
+    const { id } = req.params;
+    const publicId = req.query.publicId
 
     if (!id || !publicId) {
       return res.status(400).json({ message: "Missing id or publicId" });
     }
 
-
-    let pId = publicId.split('/')[1]
-
     // Delete image from Cloudinary
-    const cloudinaryResult = await cloudinary.uploader.destroy(pId);
+    const cloudinaryResult = await cloudinary.uploader.destroy(publicId, {
+      resource_type: 'image',
+      type: 'upload'
+    });
 
     if (cloudinaryResult.result !== 'ok') {
       return res.status(500).json({ message: "Failed to delete image from Cloudinary", cloudinaryResult });

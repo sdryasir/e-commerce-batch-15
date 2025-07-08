@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AddProduct() {
   const [formData, setFormData] = useState({
@@ -17,7 +17,11 @@ function AddProduct() {
     reviewsCount: '',
     isFeatured: false,
     isActive: true,
+    category: '',
+    image: null,
   });
+
+  const [categories, setCategories] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,33 +31,55 @@ function AddProduct() {
     } else if (name === 'sizes') {
       const options = Array.from(e.target.selectedOptions).map((opt) => opt.value);
       setFormData({ ...formData, sizes: options });
+    } else if (name === 'image') {
+      setFormData({ ...formData, image: e.target.files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
+  const getAllCategories = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/categories');
+      const result = await res.json();
+      setCategories(result);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
+
+  useEffect(() => {
+    getAllCategories();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formData,
-      tags: formData.tags.split(',').map(tag => tag.trim()),
-      colors: formData.colors.split(',').map(color => color.trim()),
-      price: parseFloat(formData.price),
-      discountPrice: parseFloat(formData.discountPrice),
-      stock: parseInt(formData.stock),
-      rating: parseFloat(formData.rating),
-      reviewsCount: parseInt(formData.reviewsCount),
-    };
+    const form = new FormData();
+    form.append('name', formData.name);
+    form.append('slug', formData.slug);
+    form.append('description', formData.description);
+    form.append('brand', formData.brand);
+    form.append('price', parseFloat(formData.price));
+    form.append('discountPrice', parseFloat(formData.discountPrice));
+    form.append('stock', parseInt(formData.stock));
+    form.append('sku', formData.sku);
+    form.append('rating', parseFloat(formData.rating));
+    form.append('reviewsCount', parseInt(formData.reviewsCount));
+    form.append('isFeatured', formData.isFeatured);
+    form.append('isActive', formData.isActive);
+    form.append('category', formData.category);
+    form.append('image', formData.image);
 
+    // Append tags and colors as comma-separated string or individual items
+    formData.tags.split(',').map(tag => form.append('tags[]', tag.trim()));
+    formData.colors.split(',').map(color => form.append('colors[]', color.trim()));
+    formData.sizes.forEach(size => form.append('sizes[]', size));
 
     try {
       const res = await fetch('http://localhost:3000/products/new', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        body: form,
       });
 
       const result = await res.json();
@@ -71,7 +97,7 @@ function AddProduct() {
         <h1 className="h2">Add New Product</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="mb-5">
+      <form onSubmit={handleSubmit} className="mb-5" encType="multipart/form-data">
         <div className="row">
           <div className="col-md-6 mb-3">
             <label className="form-label">Product Name</label>
@@ -87,6 +113,29 @@ function AddProduct() {
         <div className="mb-3">
           <label className="form-label">Description</label>
           <textarea name="description" className="form-control" value={formData.description} onChange={handleChange} rows={3}></textarea>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Product Category</label>
+          <select className='form-select' name="category" value={formData.category} onChange={handleChange}>
+            <option value="">Select</option>
+            {
+              categories && categories.map((category) => (
+                <option key={category._id} value={category._id}>{category.name}</option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Upload Image</label>
+          <input
+            type="file"
+            name="image"
+            className="form-control"
+            accept="image/*"
+            onChange={handleChange}
+          />
         </div>
 
         <div className="row">

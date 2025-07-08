@@ -40,7 +40,7 @@ app.use(cors({
 
 app.get('/products', getAllProducts);
 app.get('/products/:id', getProductById);
-app.post('/products/new', createnewProduct);
+app.post('/products/new', upload.single('image'), createnewProduct);
 app.put('/products/:id', updateProduct);
 app.delete('/products/:id', deleteProduct);
 

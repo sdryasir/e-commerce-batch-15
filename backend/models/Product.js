@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   slug: { type: String, unique: true },
   description: String,
   brand: String,
-  // category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
   price: Number,
   discountPrice: Number,
   stock: Number,
@@ -17,7 +17,10 @@ const productSchema = new mongoose.Schema({
     required:true
   },
   tags: [String], //['beauty', 'face', 'skincare']
-  // images: [String], //['imagea', 'image2']
+  image:{
+    public_id:String,
+    secure_url:String
+  },
   colors: [String], //['red', 'green']
   sizes: [String], //['sm','lg', 'xl' ]
   rating: { type: Number, default: 0 },
