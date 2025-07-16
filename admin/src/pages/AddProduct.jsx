@@ -33,7 +33,10 @@ function AddProduct() {
       setFormData({ ...formData, sizes: options });
     } else if (name === 'image') {
       setFormData({ ...formData, image: e.target.files[0] });
-    } else {
+    }else if(name ==='name'){
+      const slug = titleToSlug(value);
+      setFormData({ ...formData, name: value, slug });
+    }else {
       setFormData({ ...formData, [name]: value });
     }
   };
@@ -90,6 +93,15 @@ function AddProduct() {
       alert('Error submitting form');
     }
   };
+
+  function titleToSlug(title) {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')       // Remove non-word characters
+      .replace(/[\s_-]+/g, '-')       // Replace spaces/underscores with dash
+      .replace(/^-+|-+$/g, '');       // Remove leading/trailing dashes
+  }
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
