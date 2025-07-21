@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router'
 
 function Navbar() {
+    const [categories, setCategories] = useState([])
+        
+    useEffect(()=>{
+        const getAllCategories = async ()=>{
+            const res = await fetch('http://localhost:3000/categories');
+            const data = await res.json();
+            setCategories(data); 
+        }
+        getAllCategories();
+    },[])
   return (
     <div class="container-fluid bg-dark mb-30">
         <div class="row px-xl-5">
@@ -12,23 +22,12 @@ function Navbar() {
                 </a>
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style={{width: 'calc(100% - 30px)', zIndex: '999'}}>
                     <div class="navbar-nav w-100">
-                        <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dresses <i class="fa fa-angle-right float-right mt-1"></i></a>
-                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">Men's Dresses</a>
-                                <a href="" class="dropdown-item">Women's Dresses</a>
-                                <a href="" class="dropdown-item">Baby's Dresses</a>
-                            </div>
-                        </div>
-                        <a href="" class="nav-item nav-link">Shirts</a>
-                        <a href="" class="nav-item nav-link">Jeans</a>
-                        <a href="" class="nav-item nav-link">Swimwear</a>
-                        <a href="" class="nav-item nav-link">Sleepwear</a>
-                        <a href="" class="nav-item nav-link">Sportswear</a>
-                        <a href="" class="nav-item nav-link">Jumpsuits</a>
-                        <a href="" class="nav-item nav-link">Blazers</a>
-                        <a href="" class="nav-item nav-link">Jackets</a>
-                        <a href="" class="nav-item nav-link">Shoes</a>
+                        {
+                            categories.map((category, index) => (
+                                <a href="" class="nav-item nav-link">{category.name} ({category.productCount})</a>
+                            ))
+                        }
+                        
                     </div>
                 </nav>
             </div>

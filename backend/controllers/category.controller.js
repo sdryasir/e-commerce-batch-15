@@ -38,12 +38,31 @@ export const createnewCategory = async (req, res) => {
 }
 
 export const getAllCategories = async (req, res) => {
-  try {
-    const categories = await Category.find({});
-    res.json(categories)
-  } catch (error) {
-    res.json(error)
-  }
+  const categories = await Category.aggregate([
+    {
+      $lookup: {
+        from: 'products', // should match the collection name (lowercase + plural by default)
+        localField: '_id',
+        foreignField: 'category',
+        as: 'products',
+      },
+    },
+    {
+      $addFields: {
+        productCount: { $size: '$products' },
+      },
+    },
+    {
+      $project: {
+        products: 0, // exclude actual products array to keep result clean
+      },
+    },
+    {
+      $sort: { createdAt: -1 }, // optional: sort by recent categories
+    }
+  ]);
+
+  res.json(categories)
 }
 
 export const getCategoryById = async (req, res) => {
