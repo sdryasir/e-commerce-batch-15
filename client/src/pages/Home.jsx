@@ -6,14 +6,16 @@ import Categories from '../components/Categories'
 import FeaturedProduct from '../components/FeaturedProduct'
 import RecentProduct from '../components/RecentProduct'
 import Footer from '../components/Footer'
+import useFetch from '../hooks/useFetch'
 
 function Home() {
+  const {data: categories} = useFetch('http://localhost:3000/categories');
   return (
     <>
-      <Header/>
+      <Header categories={categories}/>
       <Carousel/>
       <Features/>
-      <Categories/>
+      <Categories categories={categories}/>
       <FeaturedProduct/>
       <RecentProduct/>
       <Footer/>

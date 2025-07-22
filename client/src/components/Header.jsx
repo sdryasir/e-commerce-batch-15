@@ -2,11 +2,11 @@ import React from 'react'
 import Navbar from './Navbar'
 import Topbar from './Topbar'
 
-function Header() {
+function Header({categories}) {
   return (
     <>
       <Topbar/>
-      <Navbar/>
+      <Navbar categories={categories}/>
     </>
   )
 }

@@ -1,17 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router'
 
-function Navbar() {
-    const [categories, setCategories] = useState([])
-        
-    useEffect(()=>{
-        const getAllCategories = async ()=>{
-            const res = await fetch('http://localhost:3000/categories');
-            const data = await res.json();
-            setCategories(data); 
-        }
-        getAllCategories();
-    },[])
+function Navbar({categories}) {
   return (
     <div class="container-fluid bg-dark mb-30">
         <div class="row px-xl-5">

@@ -1,18 +1,6 @@
-import React, {useState, useEffect} from 'react'
-
-function Categories() {
 
 
-    const [categories, setCategories] = useState([])
-    
-    useEffect(()=>{
-        const getAllCategories = async ()=>{
-            const res = await fetch('http://localhost:3000/categories');
-            const data = await res.json();
-            setCategories(data); 
-        }
-        getAllCategories();
-    },[])
+function Categories({categories}) {
 
   return (
     <div class="container-fluid pt-5">
